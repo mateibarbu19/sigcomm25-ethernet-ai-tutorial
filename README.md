@@ -1,5 +1,9 @@
 # Ethernet Networking for AI tutorial (Sigcomm 2025)
 
+# Tutorial materials
+
+You can find the slides presented during the tutorial [here](/slides/)
+.
 # Purpose and Scope
 
 This repository starts from a fork of the UET transport simulation
