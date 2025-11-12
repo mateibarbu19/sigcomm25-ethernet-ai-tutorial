@@ -7,12 +7,13 @@ import subprocess
 import sys
 import os
 do_process = True
-save_file = False
+save_file = True
+outpu_dir = './figures/'
 
 if save_file:
-    outpu_dir = './figures/'
     if not os.path.exists(outpu_dir):
         os.makedirs(outpu_dir)
+
 def run_experiments(input_filename):
     # Read the filenames from the input file
     with open(input_filename, 'r') as file:
@@ -168,7 +169,16 @@ def run_experiments(input_filename):
 
             print ("Summary:",x.decode('utf-8'))
             if do_process:
-                subprocess.call("parse_output " + 'logout.dat' + " -ascii > " + "./datacenter/logs/test.asc", shell=True)#+filename.split('/')[-1].split('.')[0]+".asc"
+                # Ensure the output directory exists
+                os.makedirs("./datacenter/logs", exist_ok=True)
+
+                # Define input and output files
+                input_file = "logout.dat"
+                output_file = "./datacenter/logs/test.asc"
+
+                # Run the command
+                with open(output_file, "w") as out:
+                    subprocess.run(["parse_output", input_file, "-ascii"], stdout=out, check=True)
         else:
             # Print any errors that occurred
             print("Error processing file ",filename,errors.decode())
@@ -191,17 +201,13 @@ def run_experiments(input_filename):
             plt.grid(True)
             full_path = os.path.join(outpu_dir, 'fcts.png')
             if save_file:
+                fig = plt.gcf()  # get current figure
+                fig.set_size_inches(70, 75)  # change size (width, height)
                 plt.savefig(full_path,format='png')
             else:
                 plt.show()
 
-
-
-
-
-
-
-    plt.figure()
+    plt.figure(figsize=(75, 5))
     keys = list(new_pkts.keys())
     print(keys)
     values = list(new_pkts.values())
@@ -216,7 +222,7 @@ def run_experiments(input_filename):
         plt.show()
  
 
-    plt.figure()
+    plt.figure(figsize=(75, 5))
     keys = list(rtx.keys())
     values = list(rtx.values())
     plt.bar(keys, values)
@@ -229,7 +235,7 @@ def run_experiments(input_filename):
     else:
         plt.show()
 
-    plt.figure()
+    plt.figure(figsize=(75, 5))
     keys = list(rts.keys())
     values = list(rts.values())
     plt.bar(keys, values)
@@ -242,7 +248,7 @@ def run_experiments(input_filename):
     else:
         plt.show()
 
-    plt.figure()
+    plt.figure(figsize=(75, 5))
     keys = list(acks.keys())
     values = list(acks.values())
     plt.bar(keys, values)
@@ -264,7 +270,6 @@ i = 1
 # path = './datacenter/'
 path = ''
 
-
 filename='validate_uec_sender.txt'
 
 while (i<n):
@@ -276,8 +281,4 @@ while (i<n):
         
     i = i + 1
 
-
 run_experiments(path+filename)
-
-
-# run_experiments(filename)
