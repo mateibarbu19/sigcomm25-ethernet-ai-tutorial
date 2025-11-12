@@ -29,6 +29,7 @@
         buildInputs = with pkgs; [
           llvmPackages_latest.clang-tools # Order
           gnumake
+          cmake
           gdb
 
           pythonWithPackages

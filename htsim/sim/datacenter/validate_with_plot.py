@@ -176,9 +176,9 @@ def run_experiments(input_filename):
                 input_file = "logout.dat"
                 output_file = "./datacenter/logs/test.asc"
 
-                # Run the command
+                # # Run the command
                 with open(output_file, "w") as out:
-                    subprocess.run(["parse_output", input_file, "-ascii"], stdout=out, check=True)
+                    subprocess.run(["../build/parse_output", input_file, "-ascii"], stdout=out, check=True)
         else:
             # Print any errors that occurred
             print("Error processing file ",filename,errors.decode())
