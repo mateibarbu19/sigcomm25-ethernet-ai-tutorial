@@ -12,7 +12,7 @@
       # Import the pip2nix-generated python-packages.nix
       # packageOverrides = pkgs.callPackage ./python-packages.nix { };
       # Create the Python interpreter with the overrides
-      python = pkgs.python313Full.override { };
+      python = pkgs.python313.override { };
       pythonWithPackages = python.withPackages (
         ps: with ps; [
           matplotlib
