@@ -27,6 +27,8 @@
 
       devShells.x86_64-linux.default = pkgs.mkShell {
         buildInputs = with pkgs; [
+          bashInteractive
+
           llvmPackages_latest.clang-tools # Order
           gnumake
           cmake
