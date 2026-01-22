@@ -15,4 +15,5 @@ idmap.txt
 !example_validate.json
 build/
 
+**/.cache
 result

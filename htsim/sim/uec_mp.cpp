@@ -134,6 +134,10 @@ uint16_t UecMpBitmap::nextEntropy(uint64_t seq_sent, uint64_t cur_cwnd_in_pkts) 
     return entropy;
 }
 
+void UecMpBitmapUnpatched::processEv(uint16_t path_id, PathFeedback feedback) {
+    return UecMpBitmap::processEv(UNKNOWN_EV, feedback);
+}
+
 UecMpReps::UecMpReps(uint16_t no_of_paths, bool debug, bool is_trimming_enabled)
     : UecMultipath(debug),
       _no_of_paths(no_of_paths),

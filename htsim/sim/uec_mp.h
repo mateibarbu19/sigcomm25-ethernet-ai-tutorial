@@ -47,7 +47,7 @@ public:
     UecMpBitmap(uint16_t no_of_paths, bool debug);
     void processEv(uint16_t path_id, PathFeedback feedback) override;
     uint16_t nextEntropy(uint64_t seq_sent, uint64_t cur_cwnd_in_pkts) override;
-private:
+protected:
     uint16_t _no_of_paths;       // must be a power of 2
     uint16_t _path_random;       // random upper bits of EV, set at startup and never changed
     uint16_t _path_xor;          // random value set each time we wrap the entropy values - XOR with
@@ -57,6 +57,12 @@ private:
 
     uint16_t _ev_skip_count;
     uint8_t _max_penalty;             // max value we allow in _path_penalties (typically 1 or 2).
+};
+
+class UecMpBitmapUnpatched : public UecMpBitmap {
+public:
+    UecMpBitmapUnpatched(uint16_t no_of_paths, bool debug) : UecMpBitmap(no_of_paths, debug) {}
+    void processEv(uint16_t path_id, PathFeedback feedback) override;
 };
 
 class UecMpRepsLegacy : public UecMultipath {

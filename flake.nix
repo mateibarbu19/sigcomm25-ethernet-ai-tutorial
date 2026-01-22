@@ -1,5 +1,5 @@
 {
-  description = "Simple C/C++ dev environment";
+  description = "C/C++ dev environment";
 
   inputs = {
     nixpkgs.url = "nixpkgs/25.05";
@@ -23,9 +23,9 @@
 
     in
     {
-      packages.x86_64-linux.default = pkgs.hello;
-
       devShells.x86_64-linux.default = pkgs.mkShell {
+        name = "cpp-dev";
+
         buildInputs = with pkgs; [
           bashInteractive
 
@@ -35,9 +35,7 @@
           gdb
 
           pythonWithPackages
-
           ruff
-          gnuplot
         ];
 
         # env.LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [

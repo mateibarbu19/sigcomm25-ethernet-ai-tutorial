@@ -86,7 +86,15 @@ int main(int argc, char **argv) {
     simtime_picosec switch_latency = timeFromUs((uint32_t)0);
     queue_type qt = COMPOSITE;
 
-    enum LoadBalancing_Algo { BITMAP, REPS, REPS_LEGACY, OBLIVIOUS, MIXED, SIGCOMM};
+    enum LoadBalancing_Algo {
+        BITMAP,
+        BITMAP_UNPATCHED,
+        REPS,
+        REPS_LEGACY,
+        OBLIVIOUS,
+        MIXED,
+        SIGCOMM
+    };
     LoadBalancing_Algo load_balancing_algo = MIXED;
 
     bool log_sink = false;
@@ -220,6 +228,9 @@ int main(int argc, char **argv) {
             if (!strcmp(argv[i+1], "bitmap")) {
                 load_balancing_algo = BITMAP;
             } 
+            else if (!strcmp(argv[i+1], "bitmap_unpatched")) {
+                load_balancing_algo = BITMAP_UNPATCHED;
+            }
             else if (!strcmp(argv[i+1], "reps")) {
                 load_balancing_algo = REPS;
             }
@@ -809,6 +820,8 @@ int main(int argc, char **argv) {
             unique_ptr<UecMultipath> mp = nullptr;
             if (load_balancing_algo == BITMAP){
                 mp = make_unique<UecMpBitmap>(path_entropy_size, UecSrc::_debug);
+            } else if (load_balancing_algo == BITMAP_UNPATCHED) {
+                mp = make_unique<UecMpBitmapUnpatched>(path_entropy_size, UecSrc::_debug);
             } else if (load_balancing_algo == REPS){
                 mp = make_unique<UecMpReps>(path_entropy_size, UecSrc::_debug, !disable_trim);
             } else if (load_balancing_algo == REPS_LEGACY){
