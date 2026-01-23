@@ -1034,8 +1034,7 @@ void UecSrc::processAck(const UecAckPacket& pkt) {
     // now check if we are in the negative.
     //assert(_in_flight >= 0);
 
-
-    _mp->processEv(pkt.ev(), pkt.ecn_echo() ? UecMultipath::PATH_ECN : UecMultipath::PATH_GOOD);
+    _mp->processEv(pkt.ev(), pkt.ecn_echo() ? UecMultipath::PATH_ECN : UecMultipath::PATH_GOOD, delay);
 
     if(_flow.flow_id() == _debug_flowid ){
         cout <<  timeAsUs(eventlist().now()) << " flowid " << _flow.flow_id() << " track_avg_rtt " << timeAsUs(get_avg_delay())
@@ -1601,10 +1600,15 @@ void UecSrc::processNack(const UecNackPacket& pkt) {
         recalculateRTO();
     }
 
+    simtime_picosec delay = 0;
+    if (raw_rtt >= _base_rtt) {
+        delay = raw_rtt - _base_rtt;
+    }
+
     if (pkt.last_hop())
-        _mp->processEv(ev, pkt.ecn_echo() ? UecMultipath::PATH_ECN : UecMultipath::PATH_GOOD);
+        _mp->processEv(ev, pkt.ecn_echo() ? UecMultipath::PATH_ECN : UecMultipath::PATH_GOOD, delay);
     else
-        _mp->processEv(ev, UecMultipath::PATH_NACK);
+        _mp->processEv(ev, UecMultipath::PATH_NACK, delay);
 
     sendIfPermitted();
 }
@@ -2334,7 +2338,7 @@ void UecSrc::rtxTimerExpired() {
     // not be able to recover the original timed-out ev.
     // BUG: The following implementation hardcoded the EV
     // _mp->processEv(UecMultipath::UNKNOWN_EV, UecMultipath::PATH_TIMEOUT);
-    _mp->processEv(hashmap_entropy[seqno], UecMultipath::PATH_TIMEOUT);
+    _mp->processEv(hashmap_entropy[seqno], UecMultipath::PATH_TIMEOUT, -1);
 
     // update flightsize?
 
